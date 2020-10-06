@@ -1,0 +1,22 @@
+version: '3'
+services:
+  mongo:
+    image: mongo
+    environment:
+      MONGO_INITDB_DATABASE: test
+    ports:
+        - 27017:27017
+  node:
+    restart: on-failure
+    build:
+      context: .
+      dockerfile: ./.docker/node.dev.Dockerfile
+    depends_on: 
+      - mongo
+    environment:
+      PORT: 8080
+      MONGOHOST: mongo
+      MONGODATA: test
+      MONGOPORT: 27017
+    ports:
+        - 8080:8080
