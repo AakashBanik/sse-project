@@ -23,8 +23,12 @@ require('./config/passport')(passport);
 
 //use the first link for docker compose and the second one for mongodb atlas
 //let mongoUrl = 'mongodb://' + process.env.MONGOHOST + '/' + process.env.MONGODATA + ':' + process.env.MONGOPORT + '/user';
+<<<<<<< HEAD
 let mongoUrl = "mongodb+srv://aakash:aakash@cluster0.rm4tn.mongodb.net/user?retryWrites=true&w=majority"
 let mongoUri = "mongodb+srv://aakash:aakash@cluster0.rm4tn.mongodb.net/integrity?retryWrites=true&w=majority"
+=======
+let mongoUrl = ''
+>>>>>>> master
 
 const app = express();
 const PORT = process.env.PORT || 8080;
