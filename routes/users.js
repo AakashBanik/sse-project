@@ -3,6 +3,23 @@ const router = express.Router();
 const User = require('./../models/User');
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
+const redis = require('redis');
+const MongoClient = require('mongodb').MongoClient;
+
+
+let mongoUri = "mongodb+srv://aakash:aakash@cluster0.rm4tn.mongodb.net/integrity?retryWrites=true&w=majority"
+
+
+const client = redis.createClient({
+    host: process.env.REDIS_HOST, //mentioned in docker compose file
+    port: process.env.REDIS_PORT
+});
+
+client.on('error', (error) => {
+    console.log(error);
+});
+
+
 //login page
 router.get('/login', (req, res) => {
     res.render('login');
@@ -94,9 +111,32 @@ router.post('/login', (req, res, next) => {
 
 //handle logut
 router.get('/logout', (req, res) => {
+    client.mget(['user', 'ip', 'country', 'latitude', 'longitude', 'loggedinAt', 'cookie'], (error, reply) => {
+        var integrityObject = {
+            user: reply[0],
+            ip: reply[1],
+            country: reply[2],
+            latitude: reply[3],
+            longitude: reply[4],
+            loggedinAt: reply[5],
+            loggedoutAt: Date.now(),
+            cookie: reply[6]
+        };
+        MongoClient.connect(mongoUri, {useNewUrlParser:true} ,(error, client) => {
+            if (error) throw error;
+            client.db('user').collection('integrity').insertOne(integrityObject, (error, result) => {
+                if (error) throw error;
+    
+                console.log(result);
+            });
+        });
+    });
     req.logout();
     req.flash('success_msg', 'You are successfully logged out!');
     res.redirect('/users/login');
+    client.flushall((error, success) => {
+        console.log(success);
+    })
 });
 
 module.exports = router;

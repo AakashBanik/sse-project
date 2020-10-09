@@ -9,7 +9,9 @@
         "mongoose": "5.4.1",
         "connect-flash": "0.1.1",
         "express-session": "1.15.6",
-        "body-parser": "*"
+        "body-parser": "*",
+        "mongodb": "*",
+        "redis": "*"
     },
     "scripts": {
         "start": "node app.js"

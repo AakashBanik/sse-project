@@ -1,22 +1,18 @@
 version: '3'
 services:
-  mongo:
-    image: mongo
-    environment:
-      MONGO_INITDB_DATABASE: test
-    ports:
-        - 27017:27017
+  redis:
+    container_name: redis
+    image: redis
   node:
     restart: on-failure
     build:
       context: .
       dockerfile: ./.docker/node.dev.Dockerfile
     depends_on: 
-      - mongo
+      - redis
     environment:
       PORT: 8080
-      MONGOHOST: mongo
-      MONGODATA: test
-      MONGOPORT: 27017
+      REDIS_PORT: 6379
+      REDIS_HOST: redis
     ports:
         - 8080:8080

@@ -4,6 +4,19 @@ const mongoose = require('mongoose');
 const flash = require('connect-flash');
 const session = require('express-session');
 const passport = require('passport');
+const path = require('path');
+const bodyParser = require('body-parser');
+const redis = require('redis');
+
+const client = redis.createClient({
+    host: process.env.REDIS_HOST, //mentioned in docker compose file
+    port: process.env.REDIS_PORT
+});
+
+client.on('error', (error) => {
+    console.log(error);
+});
+
 
 require('./config/passport')(passport);
 
@@ -11,9 +24,15 @@ require('./config/passport')(passport);
 //use the first link for docker compose and the second one for mongodb atlas
 //let mongoUrl = 'mongodb://' + process.env.MONGOHOST + '/' + process.env.MONGODATA + ':' + process.env.MONGOPORT + '/user';
 let mongoUrl = "mongodb+srv://aakash:aakash@cluster0.rm4tn.mongodb.net/user?retryWrites=true&w=majority"
+let mongoUri = "mongodb+srv://aakash:aakash@cluster0.rm4tn.mongodb.net/integrity?retryWrites=true&w=majority"
 
 const app = express();
 const PORT = process.env.PORT || 8080;
+
+app.use(bodyParser.json());
+
+//server static files
+app.use('/js', express.static(path.join(__dirname + '/js')));
 
 //mongodb
 mongoose.connect(mongoUrl, { useNewUrlParser: true })
@@ -51,6 +70,39 @@ app.use((req, res, next) => {
 //routes
 app.use('/', require('./routes/index'));
 app.use('/users', require('./routes/users'));
+
+
+
+app.post('/', (req, res) => {
+    console.log("Post triggered");
+    res.setHeader('Content-Type', 'application/json');
+    var integrityData = {
+        user: req.user.name,
+        ip: req.body.ip_address,
+        country: req.body.country,
+        city: req.body.city,
+        region: req.body.region,
+        longitude: req.body.longitude,
+        latitude: req.body.latitude,
+        date: Date.now(),
+        process: 'Log In'
+    }
+    var cookies = req.headers.cookie;
+    var splitCookie = cookies.split(';');
+    var cookie = 'abc';
+    splitCookie.forEach(element => {
+        if (element.includes('connect.sid')) {
+            cookie = element.split('=')[1];
+        }
+    });
+    client.set('user', req.user.name);
+    client.set('ip', req.body.ip_address);
+    client.set('country', req.body.country);
+    client.set('latitude', req.body.latitude);
+    client.set('longitude', req.body.longitude);
+    client.set('loggedinAt', Date.now());
+    client.set('cookie', cookie);
+});
 
 app.listen(PORT, () => {
     console.log(`Server started at ${PORT}`);
