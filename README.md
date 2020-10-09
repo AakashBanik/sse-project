@@ -1,8 +1,14 @@
 sse-project
 
-
+<p>
 To run it using docker-compose, write the command: docker-compose up --build
-Using only docker and mongodo atlas: docker build -f ./.docker/node.dev.Dockerfile .
+</p>
+<p>
 Using local node and npm: 
-    1. npm install
-    2. npm run start
+    <ul>
+        <li>1. npm install </li>
+        <li>2. npm run start </li>
+    <li>3. Install Redis server on you pc or set it up on docker and mention the local ip and port number (6379) </li>
+       </ul>
+       
+</p>
