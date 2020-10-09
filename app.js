@@ -23,12 +23,8 @@ require('./config/passport')(passport);
 
 //use the first link for docker compose and the second one for mongodb atlas
 //let mongoUrl = 'mongodb://' + process.env.MONGOHOST + '/' + process.env.MONGODATA + ':' + process.env.MONGOPORT + '/user';
-<<<<<<< HEAD
 let mongoUrl = "mongodb+srv://aakash:aakash@cluster0.rm4tn.mongodb.net/user?retryWrites=true&w=majority"
 let mongoUri = "mongodb+srv://aakash:aakash@cluster0.rm4tn.mongodb.net/integrity?retryWrites=true&w=majority"
-=======
-let mongoUrl = ''
->>>>>>> master
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -76,21 +72,9 @@ app.use('/', require('./routes/index'));
 app.use('/users', require('./routes/users'));
 
 
-
 app.post('/', (req, res) => {
     console.log("Post triggered");
     res.setHeader('Content-Type', 'application/json');
-    var integrityData = {
-        user: req.user.name,
-        ip: req.body.ip_address,
-        country: req.body.country,
-        city: req.body.city,
-        region: req.body.region,
-        longitude: req.body.longitude,
-        latitude: req.body.latitude,
-        date: Date.now(),
-        process: 'Log In'
-    }
     var cookies = req.headers.cookie;
     var splitCookie = cookies.split(';');
     var cookie = 'abc';
