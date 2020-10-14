@@ -5,9 +5,15 @@ const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const redis = require('redis');
 const MongoClient = require('mongodb').MongoClient;
+const { ensureAuth } = require('../config/auth');
+
+const accountSid = 'AC220dfb42781b7a1696980087b049c168'; 
+const authToken = '5b10e4438cdd60112313adcabd9fa657';
+const twilio = require('twilio')(accountSid, authToken);
 
 
-let mongoUri = "mongodb+srv://aakash:aakash@cluster0.rm4tn.mongodb.net/integrity?retryWrites=true&w=majority"
+let mongoUri = "mongodb+srv://aakash:aakash@cluster0.rm4tn.mongodb.net/integrity?retryWrites=true&w=majority";
+let mongoUrl = "mongodb+srv://aakash:aakash@cluster0.rm4tn.mongodb.net/user?retryWrites=true&w=majority";
 
 
 const client = redis.createClient({
@@ -33,11 +39,11 @@ router.get('/register', (req, res) => {
 router.post('/register', (req, res) => {
     // console.log(req.body);
 
-    const { name, email, password, password2 } = req.body;
+    const { name, email, password, password2, phone } = req.body;
 
     let errors = [];
 
-    if (!name || !email || !password || !password2) {
+    if (!name || !email || !password || !password2 || !phone) {
         errors.push({ msg: 'Please fill in all fields' });
     }
 
@@ -55,7 +61,8 @@ router.post('/register', (req, res) => {
             name,
             email,
             password,
-            password2
+            password2,
+            phone
         });
     } else {
         //validation passed
@@ -69,13 +76,16 @@ router.post('/register', (req, res) => {
                         name,
                         email,
                         password,
-                        password2
+                        password2,
+                        phone
                     }); 
                 } else {
+
                     const newUser = new User({
                         name,
                         email,
-                        password
+                        password,
+                        phone
                     });
 
                     console.log(newUser);
@@ -91,7 +101,6 @@ router.post('/register', (req, res) => {
                                     res.redirect('/users/login');
                                 })
                                 .catch(error => console.log(error));
-
                         })
                     });
                 }
@@ -103,10 +112,50 @@ router.post('/register', (req, res) => {
 //handle login routes
 router.post('/login', (req, res, next) => {
     passport.authenticate('local', {
-        successRedirect: '/dashboard',
+        successRedirect: '/users/otp',
         failureRedirect: '/users/login',
         failureFlash: true
     })(req, res, next);
+});
+
+router.get('/otp', ensureAuth, (req, res, next) => {
+    const token = Math.floor(Math.random() * (999999 - 111111 + 1) + 111111);
+    client.set('token', token);
+    MongoClient.connect(mongoUrl, (error, mongoclient) => {
+        if (error) throw error;
+        mongoclient.db('user').collection('users').findOne({ name: req.user.name }, (error, user) => {
+            if (error) throw error;
+            const phone = '+91' + user.phone;
+            console.log(phone);
+            console.log(token);
+            twilio.messages.create({
+                    body: 'The Code for loggin into the voting system is: ' + token,
+                    from: '+13196006371',
+                    to: phones
+                })
+                .then(message => console.log(message.sid))
+        });
+    });
+    res.render('otp');
+});
+
+router.post('/otp', (req, res) => {
+    const otp = req.body.otp;
+    let errors = [];
+
+    client.get('token', (error, reply) => {
+
+        if (otp != reply) {
+            errors.push({ msg: 'Invalid Token. Enter OTP Again' });
+        } else {
+            res.redirect('/dashboard');
+        }
+        if (errors.length > 0) {
+            res.render('otp', {
+                errors
+            });
+        }
+    })
 });
 
 //handle logut
@@ -119,7 +168,7 @@ router.get('/logout', (req, res) => {
             latitude: reply[3],
             longitude: reply[4],
             loggedinAt: reply[5],
-            loggedoutAt: Date.now(),
+            loggedoutAt: Date.now,
             cookie: reply[6]
         };
         MongoClient.connect(mongoUri, {useNewUrlParser:true} ,(error, client) => {
