@@ -6,10 +6,8 @@ const passport = require('passport');
 const redis = require('redis');
 const MongoClient = require('mongodb').MongoClient;
 const { ensureAuth } = require('../config/auth');
-
-const accountSid = 'AC220dfb42781b7a1696980087b049c168'; 
-const authToken = '5b10e4438cdd60112313adcabd9fa657';
-const twilio = require('twilio')(accountSid, authToken);
+const axios = require('axios');
+const request = require('request');
 
 
 let mongoUri = "mongodb+srv://aakash:aakash@cluster0.rm4tn.mongodb.net/integrity?retryWrites=true&w=majority";
@@ -116,6 +114,12 @@ router.post('/login', (req, res, next) => {
         failureRedirect: '/users/login',
         failureFlash: true
     })(req, res, next);
+
+    // twilio.messages.create({
+    //     to: '+918460451089',
+    //     from: '+13196006371',
+    //     body: 'Hello boi'
+    // }).then((message) => console.log(message.sid));
 });
 
 router.get('/otp', ensureAuth, (req, res, next) => {
@@ -125,15 +129,17 @@ router.get('/otp', ensureAuth, (req, res, next) => {
         if (error) throw error;
         mongoclient.db('user').collection('users').findOne({ name: req.user.name }, (error, user) => {
             if (error) throw error;
-            const phone = '+91' + user.phone;
+            let phone = '91' + user.phone;
+            phone = parseInt(phone);
+            const params = new URLSearchParams();
+            params.append("numbers", [parseInt(phone)]);
+            params.append("message", `Token Code for Login is: ${token}`);
             console.log(phone);
             console.log(token);
-            twilio.messages.create({
-                    body: 'The Code for loggin into the voting system is: ' + token,
-                    from: '+13196006371',
-                    to: phones
-                })
-                .then(message => console.log(message.sid))
+            var data = "Token is: " + token;
+            request(`https://api.textlocal.in/send/?apiKey=${process.env.api_key}&sender=TXTLCL&numbers=${phone}&message=${data}`, (error, response, body) => {
+                console.log("error: " + error); 
+            });
         });
     });
     res.render('otp');

@@ -12,7 +12,10 @@
         "body-parser": "*",
         "mongodb": "*",
         "redis": "*",
-        "twilio": "*"
+        "twilio": "*",
+        "axios": "*",
+        "request": "*"
+
     },
     "scripts": {
         "start": "node app.js"
