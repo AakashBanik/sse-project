@@ -8,7 +8,7 @@ before_install:
   - docker login --username=$HEROKU_EMAIL --password=$HEROKU_API_KEY registry.heroku.com
 script:
   - docker build -t aakash123/sse .
-  - docker tag aakash123/sse registry.heroku.com/$HEROKU_APP/sse
+  - docker tag aakash123/sse registry.heroku.com/$HEROKU_APP/web
 deploy:
   provider: script
   script: bash ./bash.sh
