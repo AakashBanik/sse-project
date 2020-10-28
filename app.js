@@ -9,8 +9,7 @@ const bodyParser = require('body-parser');
 const redis = require('redis');
 
 const client = redis.createClient({
-    host: process.env.REDIS_HOST, //mentioned in docker compose file
-    port: process.env.REDIS_PORT
+    host: process.env.REDIS_URL, //mentioned in docker compose file
 });
 
 client.on('error', (error) => {
