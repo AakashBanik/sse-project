@@ -1,0 +1,16 @@
+sudo: required
+
+services:
+  - docker
+before_install:
+  - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+  - curl https://cli-assets.heroku.com/install.sh | sh
+  - docker login --username=$HEROKU_EMAIL --password=$HEROKU_API_KEY registry.heroku.com
+script:
+  - docker build -t aakash123/sse .
+  - docker tag aakash123/sse registry.heroku.com/$HEROKU_APP/sse
+deploy:
+  provider: script
+  script: bash ./bash.sh
+  on:
+    branch: master
