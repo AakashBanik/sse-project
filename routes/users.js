@@ -15,8 +15,8 @@ let mongoUrl = "mongodb+srv://aakash:aakash@cluster0.rm4tn.mongodb.net/user?retr
 
 
 const client = redis.createClient({
-    host: process.env.REDISTOGO_URL //mentioned in docker compose file
-    //port: 6379
+    host: process.env.REDISTOGO_URL, //mentioned in docker compose file
+    port: 10484
 });
 
 client.on('error', (error) => {
