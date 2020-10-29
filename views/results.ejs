@@ -1,0 +1,181 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.css">
+
+
+
+<h2 style="text-align: center;">Overall Party Votes</h2>
+<canvas id="mybarChart" width="400" height="200"></canvas>
+
+<h1 style="text-align: center; margin-top: 30px;">Individual Candidate Votes</h1>
+
+<h3 style="text-align: center; margin-top: 30px;">Australian Democratic Party</h3>
+<canvas id="mydChart" width="400" height="200"></canvas>
+
+<h3 style="text-align: center; margin-top: 30px;">Australian Liberal Party</h3>
+<canvas id="mylChart" width="400" height="200"></canvas>
+
+<h3 style="text-align: center; margin-top: 30px;">Australian Conservative Party</h3>
+<canvas id="mycChart" width="400" height="200"></canvas>
+
+<h3 style="text-align: center; margin-top: 30px;">NAP</h3>
+<canvas id="mynChart" width="400" height="200"></canvas>
+
+<script>
+var ctx = document.getElementById('mybarChart').getContext('2d');
+var dtx = document.getElementById('mydChart').getContext('2d');
+var ltx = document.getElementById('mylChart').getContext('2d');
+var cctx = document.getElementById('mycChart').getContext('2d');
+var ntx = document.getElementById('mynChart').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['Democrats', 'Liberals', 'Conservatives', 'NAP'],
+        datasets: [{
+            label: '# of Votes',
+            data: [12, 19, 3, 5],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.6)',
+                'rgba(54, 162, 235, 0.6)',
+                'rgba(255, 206, 86, 0.6)',
+                'rgba(75, 192, 192, 0.6)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+});
+var myChart = new Chart(dtx, {
+    type: 'doughnut',
+    data: {
+        labels: ['Lyn Allison', 'Natasha Stott Despoja', 'Meg Lees'],
+        datasets: [{
+            label: '# of Votes',
+            data: [16, 11, 8],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.6)',
+                'rgba(54, 162, 235, 0.6)',
+                'rgba(255, 206, 86, 0.6)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+});
+var myChart = new Chart(ltx, {
+    type: 'doughnut',
+    data: {
+        labels: ['Lyn Allison', 'Natasha Stott Despoja', 'Meg Lees'],
+        datasets: [{
+            label: '# of Votes',
+            data: [9, 12, 13],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.6)',
+                'rgba(54, 162, 235, 0.6)',
+                'rgba(255, 206, 86, 0.6)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+});
+var myChart = new Chart(cctx, {
+    type: 'doughnut',
+    data: {
+        labels: ['Lyn Allison', 'Natasha Stott Despoja', 'Meg Lees'],
+        datasets: [{
+            label: '# of Votes',
+            data: [8, 19, 7],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.6)',
+                'rgba(54, 162, 235, 0.6)',
+                'rgba(255, 206, 86, 0.6)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+});
+var myChart = new Chart(ntx, {
+    type: 'doughnut',
+    data: {
+        labels: ['Lyn Allison', 'Natasha Stott Despoja', 'Meg Lees'],
+        datasets: [{
+            label: '# of Votes',
+            data: [5, 7, 14],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.6)',
+                'rgba(54, 162, 235, 0.6)',
+                'rgba(255, 206, 86, 0.6)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+});
+</script>

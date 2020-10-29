@@ -10,11 +10,15 @@ router.get('/', (req, res) => {
     res.render('welcome');
 });
 
-router.get('/dashboard', ensureAuth, (req, res) => {
+router.get('/dashboard',ensureAuth, (req, res) => {
     res.render('dashboard', {
         user: req.user
     });
 });
+
+router.get('/result', (req, res) => {
+    res.render('results');
+})
 
 
 module.exports = router;

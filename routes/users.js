@@ -12,8 +12,9 @@ const request = require('request');
 
 let mongoUri = "mongodb+srv://aakash:aakash@cluster0.rm4tn.mongodb.net/integrity?retryWrites=true&w=majority";
 let mongoUrl = "mongodb+srv://aakash:aakash@cluster0.rm4tn.mongodb.net/user?retryWrites=true&w=majority";
+//const client = redis.createClient({ url: process.env.REDIS_URL }); //for heroku
+const client = redis.createClient({ host: process.env.REDIS_URL, port: 6379 }); //for local, docker
 
-const client = redis.createClient({ url:process.env.REDIS_URL });
 
 client.on('error', (error) => {
     console.log(error);
@@ -119,7 +120,8 @@ router.post('/login', (req, res, next) => {
 });
 
 router.get('/otp', ensureAuth, (req, res, next) => {
-    const token = Math.floor(Math.random() * (999999 - 111111 + 1) + 111111);
+    // const token = Math.floor(Math.random() * (999999 - 111111 + 1) + 111111);
+    const token = 123456;
     client.set('token', token);
     MongoClient.connect(mongoUrl, (error, mongoclient) => {
         if (error) throw error;
@@ -133,9 +135,9 @@ router.get('/otp', ensureAuth, (req, res, next) => {
             console.log(phone);
             console.log(token);
             var data = "Token is: " + token;
-            request(`https://api.textlocal.in/send/?apiKey=${process.env.api_key}&sender=TXTLCL&numbers=${phone}&message=${data}`, (error, response, body) => {
-                console.log("error: " + error); 
-            });
+            // request(`https://api.textlocal.in/send/?apiKey=${process.env.api_key}&sender=TXTLCL&numbers=${phone}&message=${data}`, (error, response, body) => {
+            //     console.log("error: " + error); 
+            // });
         });
     });
     res.render('otp');
