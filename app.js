@@ -8,10 +8,9 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const redis = require('redis');
 
-const client = redis.createClient({
-    host: process.env.REDISTOGO_URL,
-    port: 10484 //mentioned in docker compose file
-});
+const client = redis.createClient(process.env.REDIS_URL, {
+    no_ready_check: true
+ });
 
 client.on('error', (error) => {
     console.log(error);

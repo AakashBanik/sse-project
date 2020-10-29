@@ -13,11 +13,9 @@ const request = require('request');
 let mongoUri = "mongodb+srv://aakash:aakash@cluster0.rm4tn.mongodb.net/integrity?retryWrites=true&w=majority";
 let mongoUrl = "mongodb+srv://aakash:aakash@cluster0.rm4tn.mongodb.net/user?retryWrites=true&w=majority";
 
-
-const client = redis.createClient({
-    host: process.env.REDISTOGO_URL, //mentioned in docker compose file
-    port: 10484
-});
+const client = redis.createClient(process.env.REDIS_URL, {
+    no_ready_check: true
+ });
 
 client.on('error', (error) => {
     console.log(error);
