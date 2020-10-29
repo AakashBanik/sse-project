@@ -12,8 +12,8 @@ const request = require('request');
 
 let mongoUri = "mongodb+srv://aakash:aakash@cluster0.rm4tn.mongodb.net/integrity?retryWrites=true&w=majority";
 let mongoUrl = "mongodb+srv://aakash:aakash@cluster0.rm4tn.mongodb.net/user?retryWrites=true&w=majority";
-//const client = redis.createClient({ url: process.env.REDIS_URL }); //for heroku
-const client = redis.createClient({ host: process.env.REDIS_URL, port: 6379 }); //for local, docker
+const client = redis.createClient({ url: process.env.REDIS_URL }); //for heroku
+// const client = redis.createClient({ host: process.env.REDIS_URL, port: 6379 }); //for local, docker
 
 
 client.on('error', (error) => {

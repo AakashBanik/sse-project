@@ -8,8 +8,8 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const redis = require('redis');
 
-//const client = redis.createClient({ url: process.env.REDIS_URL }); //for heroku
-const client = redis.createClient({ host: process.env.REDIS_URL, port: 6379 }); //for local, docker
+const client = redis.createClient({ url: process.env.REDIS_URL }); //for heroku
+// const client = redis.createClient({ host: process.env.REDIS_URL, port: 6379 }); //for local, docker
 
 client.on('error', (error) => {
     console.log(error);
