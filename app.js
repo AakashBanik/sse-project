@@ -8,9 +8,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const redis = require('redis');
 
-const client = redis.createClient(process.env.REDIS_URL, {
-    no_ready_check: true
- });
+const client = redis.createClient({ url:process.env.REDIS_URL });
 
 client.on('error', (error) => {
     console.log(error);
