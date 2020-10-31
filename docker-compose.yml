@@ -14,6 +14,5 @@ services:
       PORT: 8080
       REDIS_PORT: 6379
       REDIS_URL: redis
-      api_key: /iX5Fvkrvro-l9N8dtlLGpn47nvlRRtephJcn8ca1z
     ports:
         - 8080:8080

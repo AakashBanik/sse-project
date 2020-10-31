@@ -1,6 +1,6 @@
-module.exports = {
+module.exports = { //used to protech routes so that any un-authenticated users cannot access secured routes
     ensureAuth: function (req, res, next) {
-        if (req.isAuthenticated()) {
+        if (req.isAuthenticated()) {  //function is provided by the passport middleware
             return next();
         }
 

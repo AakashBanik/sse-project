@@ -132,24 +132,21 @@ router.post('/login', (req, res, next) => {
 });
 
 router.get('/otp', ensureAuth, (req, res, next) => {
-    //const token = Math.floor(Math.random() * (999999 - 111111 + 1) + 111111);
+    //const token = Math.floor(Math.random() * (999999 - 111111 + 1) + 111111); //disabled just for demo and testing purposes
     const token = 123456;
     client.set('token', token);
     MongoClient.connect(mongoUrl, (error, mongoclient) => {
         if (error) throw error;
-        mongoclient.db('user').collection('users').findOne({ name: req.user.name }, (error, user) => {
+        mongoclient.db('user').collection('users').findOne({ name: req.user.name }, (error, user) => { //is used to find the username and his phone number where in we need to send the otp
             if (error) throw error;
             let phone = '91' + user.phone;
             phone = parseInt(phone);
-            const params = new URLSearchParams();
-            params.append("numbers", [parseInt(phone)]);
-            params.append("message", `Token Code for Login is: ${token}`);
             console.log(phone);
             console.log(token);
             var data = "Token is: " + token;
             // request(`https://api.textlocal.in/send/?apiKey=${process.env.api_key}&sender=TXTLCL&numbers=${phone}&message=${data}`, (error, response, body) => {
             //     console.log("error: " + error); 
-            // });
+            // }); //not supported outside india, hence disabled at the moment
         });
     });
     res.render('otp');
@@ -176,20 +173,19 @@ router.post('/otp', (req, res) => {
 
 //handle logut
 router.get('/logout', (req, res) => {
-    client.mget(['user', 'ip', 'country', 'latitude', 'longitude', 'loggedinAt', 'cookie'], (error, reply) => {
-        var integrityObject = {
+    client.mget(['user', 'ip', 'country', 'latitude', 'longitude', 'loggedinAt'], (error, reply) => { //writes to the mongodb dataset after the user is logged out or voting finishes
+        var integrityObject = {  //gets values from redis
             user: reply[0],
             ip: reply[1],
             country: reply[2],
             latitude: reply[3],
             longitude: reply[4],
             loggedinAt: reply[5],
-            loggedoutAt: Date.now,
-            cookie: reply[6]
+            loggedoutAt: Date.now
         };
         MongoClient.connect(mongoUri, {useNewUrlParser:true} ,(error, client) => {
             if (error) throw error;
-            client.db('user').collection('integrity').insertOne(integrityObject, (error, result) => {
+            client.db('user').collection('integrity').insertOne(integrityObject, (error, result) => { //object is written to the memory
                 if (error) throw error;
     
                 console.log(result);
