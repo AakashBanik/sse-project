@@ -14,8 +14,8 @@
         "redis": "*",
         "twilio": "*",
         "axios": "*",
-        "request": "*"
-
+        "request": "*",
+        "password-validator": "*"
     },
     "scripts": {
         "start": "node app.js"

@@ -8,6 +8,18 @@ const MongoClient = require('mongodb').MongoClient;
 const { ensureAuth } = require('../config/auth');
 const axios = require('axios');
 const request = require('request');
+const passwordValidator = require('password-validator');
+
+let schema = new passwordValidator();
+
+schema
+.is().min(8)                                    // Minimum length 8
+.is().max(100)                                  // Maximum length 100
+.has().uppercase()                              // Must have uppercase letters
+.has().lowercase()                              // Must have lowercase letters
+.has().digits(2)                                // Must have at least 2 digits
+.has().not().spaces()                           // Should not have spaces
+.is().not().oneOf(['123456','Password','password','654321','Password123', 'password123']); // Blacklist these values
 
 
 let mongoUri = "mongodb+srv://aakash:aakash@cluster0.rm4tn.mongodb.net/integrity?retryWrites=true&w=majority";
@@ -46,8 +58,8 @@ router.post('/register', (req, res) => {
         errors.push({ msg: "Passwords not equal" });
     }
 
-    if (password.length < 6) {
-        errors.push({ msg: "Password should be atleast 6 chars long" });
+    if (schema.validate(password)) {
+        errors.push({ msg: "Please use a different password" });
     }
 
     if (errors.length > 0) {
@@ -120,7 +132,7 @@ router.post('/login', (req, res, next) => {
 });
 
 router.get('/otp', ensureAuth, (req, res, next) => {
-    // const token = Math.floor(Math.random() * (999999 - 111111 + 1) + 111111);
+    //const token = Math.floor(Math.random() * (999999 - 111111 + 1) + 111111);
     const token = 123456;
     client.set('token', token);
     MongoClient.connect(mongoUrl, (error, mongoclient) => {
