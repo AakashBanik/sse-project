@@ -197,7 +197,7 @@ router.get('/logout', (req, res) => {
         });
     });
     req.logout();
-    req.flash('success_msg', 'You are successfully logged out!');
+    req.flash('success_msg', 'Your vote has been successfully registered! Thank You!');
     res.redirect('/users/login');
     client.flushall((error, success) => {
         console.log(success);
